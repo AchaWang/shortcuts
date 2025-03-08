@@ -1,3 +1,3 @@
 #!/bin/bash
 pip install yt-dlp
-touch yt.lock
+touch yt.lck
