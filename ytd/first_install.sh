@@ -1,3 +1,3 @@
 #!/bin/bash
-pip install yt-dlp
+pip install -U yt-dlp
 python createLock.py
