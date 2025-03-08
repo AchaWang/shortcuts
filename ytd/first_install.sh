@@ -1,3 +1,4 @@
 #!/bin/bash
 pip install yt-dlp
-touch "yt.lock"
+touch "ytlock.txt"
+mv "ytlock.txt" "yt.lock"
