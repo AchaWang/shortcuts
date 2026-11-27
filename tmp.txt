@@ -1,1 +1,1 @@
-reg query HKLM\SYSTEM\CurrentControlSet\Services\SNMP\Parameters /s
+Get-Service SMTPSVC | Select-Object Name, Status, StartType
