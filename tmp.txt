@@ -1,1 +1,4 @@
-Select-String C:\inetpub\wwwroot\GoodShopping\web.config, C:\inetpub\wwwroot\moviescope\web.config -Pattern 'targetFramework|aspNetCore'
+Import-Module WebAdministration
+Get-ChildItem IIS:\AppPools | Select-Object Name, managedRuntimeVersion, managedPipelineMode
+Get-ItemProperty IIS:\Sites\GoodShopping, IIS:\Sites\Moviescope | Select-Object Name, applicationPool
+Get-ChildItem C:\inetpub\wwwroot\GoodShopping | Select-Object Name
