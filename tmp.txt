@@ -1,0 +1,34 @@
+$out = "$env:USERPROFILE\Desktop\lab-check-$env:COMPUTERNAME.txt"
+Start-Transcript -Path $out -Force | Out-Null
+Write-Host "===== $env:COMPUTERNAME =====" -ForegroundColor Cyan
+
+Write-Host "`n[1] SQL / MySQL / Wamp services" -ForegroundColor Yellow
+Get-Service | Where-Object { $_.Name -match 'SQL|MySQL|wamp' } |
+  Format-Table Name, DisplayName, Status, StartType -AutoSize
+
+Write-Host "`n[2] Installed SQL related programs" -ForegroundColor Yellow
+Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*,
+                 HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* -ErrorAction SilentlyContinue |
+  Where-Object DisplayName -match 'SQL|MySQL|MariaDB|Wamp' |
+  Select-Object DisplayName, DisplayVersion | Sort-Object DisplayName -Unique | Format-Table -AutoSize
+
+Write-Host "`n[3] Listening ports (80, 443, 1433, 3306, 8080)" -ForegroundColor Yellow
+netstat -ano | Select-String 'LISTENING' | Select-String ':80 |:443 |:1433 |:3306 |:8080 '
+
+Write-Host "`n[4] IIS sites and paths" -ForegroundColor Yellow
+$appcmd = "$env:windir\system32\inetsrv\appcmd.exe"
+if (Test-Path $appcmd) { & $appcmd list site; & $appcmd list vdir } else { Write-Host "IIS not installed" }
+
+Write-Host "`n[5] MSSQL databases" -ForegroundColor Yellow
+if (Get-Command sqlcmd -ErrorAction SilentlyContinue) {
+  sqlcmd -S localhost -E -Q "SELECT name FROM sys.databases"
+} else { Write-Host "sqlcmd not found" }
+
+Write-Host "`n[6] Wamp web folders" -ForegroundColor Yellow
+foreach ($p in 'C:\wamp64\www','C:\wamp\www') { if (Test-Path $p) { Get-ChildItem $p | Select-Object Name } }
+
+Write-Host "`n[7] hosts file entries" -ForegroundColor Yellow
+Get-Content "$env:windir\System32\drivers\etc\hosts" | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() }
+
+Stop-Transcript | Out-Null
+Write-Host "`nSaved to $out" -ForegroundColor Green
