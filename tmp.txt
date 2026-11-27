@@ -1,1 +1,3 @@
-Get-Service SMTPSVC | Select-Object Name, Status, StartType
+
+sqlcmd -S .\SQLEXPRESS -U sa -P 'qwerty@123' -Q "SELECT 1"
+sqlcmd -S .\SQLEXPRESS -U ECCUser -P 'qwerty@123' -Q "SELECT 1"
