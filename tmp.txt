@@ -1,4 +1,7 @@
-Import-Module WebAdministration
-Get-ChildItem IIS:\AppPools | Select-Object Name, managedRuntimeVersion, managedPipelineMode
-Get-ItemProperty IIS:\Sites\GoodShopping, IIS:\Sites\Moviescope | Select-Object Name, applicationPool
-Get-ChildItem C:\inetpub\wwwroot\GoodShopping | Select-Object Name
+Get-WindowsFeature | Where-Object Installed | Select-Object Name
+Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
+  Where-Object DisplayName | Select-Object DisplayName, DisplayVersion | Sort-Object DisplayName -Unique
+
+
+
+Get-WindowsOptionalFeature -Online | Where-Object State -eq Enabled | Select-Object FeatureName
